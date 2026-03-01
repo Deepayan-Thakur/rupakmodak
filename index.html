@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rupak Modak | Artist & Cinematographer</title>
+    <meta name="description" content="Portfolio of Elias Thorne, a contemporary artist specializing in abstract paintings, digital art, and modern sculpture.">
+    
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --cream: #f7f4ef;
+            --ink: #1a1714;
+            --warm-gray: #6b6560;
+            --gold: #c9a96e;
+            --gold-light: #e8d5b0;
+            --accent: #8b3a3a;
+            --border: rgba(26,23,20,0.12);
+        }
+        .dark {
+            --cream: #0f0e0c;
+            --ink: #f0ebe3;
+            --warm-gray: #9a9088;
+            --border: rgba(240,235,227,0.1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { font-size: 16px; scroll-behavior: smooth; }
+
+        body {
+            background: var(--cream);
+            color: var(--ink);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 300;
+            overflow-x: hidden;
+            cursor: none;
+            position: relative;
+        }
+
+        /* ── Ambient Background Blobs ── */
+        .ambient-bg {
+            position: fixed; inset: 0; z-index: -1;
+            overflow: hidden; pointer-events: none;
+            opacity: 0.5; transition: opacity 1s;
+        }
+        .dark .ambient-bg { opacity: 0.2; }
+        
+        .blob {
+            position: absolute; border-radius: 50%;
+            filter: blur(80px);
+            animation: blobAnim 15s infinite alternate ease-in-out;
+            mix-blend-mode: multiply;
+        }
+        .dark .blob { mix-blend-mode: screen; }
+        
+        .blob-1 {
+            top: -10%; left: -10%; width: 500px; height: 500px;
+            background: rgba(201, 169, 110, 0.4); /* Gold-ish */
+        }
+        .blob-2 {
+            top: 20%; right: -10%; width: 400px; height: 400px;
+            background: rgba(139, 58, 58, 0.2); /* Accent */
+            animation-delay: 2s;
+        }
+        .blob-3 {
+            bottom: -20%; left: 20%; width: 600px; height: 600px;
+            background: rgba(107, 101, 96, 0.3); /* Warm gray */
+            animation-delay: 4s;
+        }
+
+        @keyframes blobAnim {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+
+        /* ── Custom Cursor ── */
+        #cursor {
+            position: fixed;
+            width: 10px; height: 10px;
+            background: var(--ink);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+            transition: width 0.3s, height 0.3s, background 0.3s, opacity 0.3s;
+            mix-blend-mode: difference;
+        }
+        #cursor-ring {
+            position: fixed;
+            width: 40px; height: 40px;
+            border: 1px solid var(--ink);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: transform 0.12s ease-out, width 0.3s, height 0.3s, border-color 0.3s;
+            mix-blend-mode: difference;
+        }
+        .cursor-hover #cursor { width: 16px; height: 16px; }
+        .cursor-hover #cursor-ring { width: 60px; height: 60px; }
+
+        /* ── Transitions ── */
+        body, nav, section, div, h1, h2, h3, p, a, button, input, textarea {
+            transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+        /* ── Typography ── */
+        .serif { font-family: 'Cormorant Garamond', serif; }
+        .mono { font-family: 'DM Mono', monospace; }
+
+        /* ── Progress Bar ── */
+        #progress-bar {
+            position: fixed; top: 0; left: 0; height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--accent));
+            z-index: 999; width: 0%; transition: width 0.1s linear;
+        }
+
+        /* ── Nav ── */
+        nav {
+            position: fixed; width: 100%; top: 0; z-index: 100;
+            padding: 0 3rem;
+            display: flex; justify-content: space-between; align-items: center;
+            height: 80px;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.4s, backdrop-filter 0.4s, background 0.4s;
+        }
+        nav.scrolled {
+            background: rgba(247,244,239,0.85);
+            backdrop-filter: blur(20px);
+            border-color: var(--border);
+        }
+        .dark nav.scrolled { background: rgba(15,14,12,0.85); }
+
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem; font-weight: 600;
+            letter-spacing: 0.05em;
+            color: var(--ink); text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            color: var(--warm-gray); text-decoration: none;
+            font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+            position: relative; padding-bottom: 2px;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 0; height: 1px; background: var(--gold);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover { color: var(--ink); }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* ── Creative Hero Section ── */
+        #hero {
+            min-height: 100vh;
+            display: grid; grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            padding: 8rem 4rem 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero-left {
+            position: relative; z-index: 2;
+        }
+        .hero-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(4rem, 8vw, 8.5rem);
+            font-weight: 300; line-height: 0.9;
+            letter-spacing: -0.02em;
+            opacity: 0; animation: fadeUp 1s 0.3s forwards;
+            color: var(--ink);
+        }
+        .hero-name em {
+            font-style: italic; color: var(--warm-gray);
+            display: block; margin-left: 10%;
+        }
+        .hero-subtitle {
+            font-size: 1.25rem; color: var(--ink); font-weight: 500;
+            margin-top: 3rem; margin-bottom: 1.5rem;
+            opacity: 0; animation: fadeUp 0.8s 0.5s forwards;
+        }
+        .hero-desc {
+            max-width: 500px;
+            font-size: 1rem; line-height: 1.8;
+            color: var(--warm-gray);
+            margin-bottom: 1rem;
+            opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
+        }
+        .hero-cta {
+            margin-top: 2rem; display: flex; gap: 1.5rem; align-items: center;
+            opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
+        }
+        .hero-socials { display: flex; gap: 1.5rem; align-items: center; }
+        .hero-socials a { font-size: 1.5rem; color: var(--ink); transition: color 0.3s, transform 0.3s; display: flex; }
+        .hero-socials a:hover { color: var(--gold); transform: scale(1.1); }
+        .hero-link {
+            font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--ink); text-decoration: none;
+            display: flex; align-items: center; gap: 0.5rem;
+            border-bottom: 1px solid var(--ink); padding-bottom: 4px;
+            transition: color 0.3s, border-color 0.3s;
+            margin-left: 1rem;
+        }
+        .hero-link:hover { color: var(--gold); border-color: var(--gold); }
+
+        .hero-collage {
+            position: relative;
+            height: 600px;
+            width: 100%;
+            opacity: 0; animation: fadeIn 1.2s 0.4s forwards;
+        }
+        .collage-img-1 {
+            position: absolute;
+            top: 0; right: 0;
+            width: 75%; height: 80%;
+            object-fit: cover;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: transform 1s;
+            z-index: 1;
+        }
+        .collage-img-1:hover { transform: scale(1.05); }
+        
+        .collage-img-2 {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 66%; height: 66%;
+            object-fit: cover;
+            border: 8px solid var(--cream);
+            background: var(--cream);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            z-index: 2;
+            filter: grayscale(100%);
+            transition: filter 1s, transform 1s, border-color 0.5s;
+        }
+        .collage-img-2:hover { filter: grayscale(0%); }
+        .dark .collage-img-2 { border-color: var(--cream); }
+
+        .collage-deco {
+            position: absolute;
+            top: 50%; left: -2rem;
+            width: 6rem; height: 6rem;
+            border: 1px solid var(--border);
+            z-index: 0;
+            animation: spin 20s linear infinite;
+        }
+
+        .btn-primary {
+            background: var(--ink); color: var(--cream);
+            padding: 1rem 2.5rem;
+            font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+            border: none; cursor: none;
+            text-decoration: none; display: inline-block;
+            position: relative; overflow: hidden;
+            transition: color 0.4s;
+        }
+        .btn-primary::before {
+            content: ''; position: absolute; inset: 0;
+            background: var(--gold);
+            transform: translateX(-101%); transition: transform 0.4s cubic-bezier(0.77,0,0.175,1);
+        }
+        .btn-primary:hover::before { transform: translateX(0); }
+        .btn-primary span { position: relative; z-index: 1; }
+
+        /* ── Marquee ── */
+        .marquee-wrap {
+            overflow: hidden; background: var(--ink);
+            padding: 1.2rem 0; position: relative; z-index: 5;
+            transform: rotate(-1deg) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            margin: 4rem 0;
+        }
+        .marquee-track {
+            display: flex; gap: 4rem; align-items: center;
+            animation: marqueeScroll 35s linear infinite;
+            white-space: nowrap;
+        }
+        .marquee-item {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem; font-style: italic;
+            color: rgba(255,255,255,0.7); letter-spacing: 0.05em;
+            flex-shrink: 0;
+        }
+        .marquee-item.bold { font-style: normal; text-transform: uppercase; font-size: 1.2rem; font-family: 'DM Sans', sans-serif; font-weight: 500; }
+        .marquee-dot { color: var(--gold); font-style: normal; font-size: 0.6rem; }
+
+        /* ── Quote ── */
+        #philosophy {
+            padding: 10rem 4rem;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        .quote-wrap { max-width: 900px; text-align: center; position: relative; }
+        .quote-mark {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 15rem; line-height: 0.5;
+            color: var(--gold); opacity: 0.12;
+            position: absolute; top: -2rem; left: -3rem;
+            pointer-events: none; user-select: none;
+        }
+        .quote-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 3.5vw, 3rem);
+            font-weight: 300; line-height: 1.5;
+            color: var(--ink); position: relative;
+        }
+        .quote-text em { color: var(--gold); font-style: italic; }
+        .quote-attr {
+            margin-top: 2.5rem;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--warm-gray);
+            display: flex; align-items: center; justify-content: center; gap: 1rem;
+        }
+        .quote-attr::before, .quote-attr::after {
+            content: ''; width: 30px; height: 1px; background: var(--gold);
+        }
+
+        /* ── Portfolio ── */
+        #portfolio { padding: 6rem 3rem 10rem; max-width: 1400px; margin: 0 auto; }
+        .section-header {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 4rem; padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300;
+        }
+        .section-title span { color: var(--gold); font-style: italic; }
+        .section-count {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem; letter-spacing: 0.2em;
+            color: var(--warm-gray); margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex; gap: 0.5rem; flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+        .filter-pill {
+            padding: 0.4rem 1.2rem;
+            border: 1px solid var(--border);
+            background: transparent; color: var(--warm-gray);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+            cursor: none; transition: all 0.3s;
+        }
+        .filter-pill:hover { border-color: var(--gold); color: var(--ink); }
+        .filter-pill.active {
+            background: var(--ink); color: var(--cream);
+            border-color: var(--ink);
+        }
+
+        /* Gallery grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: 80px;
+            gap: 1rem;
+        }
+
+        .art-card { position: relative; overflow: hidden; cursor: none; }
+        .art-card img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.5s;
+            filter: saturate(0.8);
+        }
+        .art-card:hover img { transform: scale(1.07); filter: saturate(1.1); }
+
+        .art-card-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(26,23,20,0.9) 0%, transparent 60%);
+            opacity: 0; transition: opacity 0.4s;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            padding: 1.5rem;
+        }
+        .art-card:hover .art-card-overlay { opacity: 1; }
+
+        .art-card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem; color: #fff; font-weight: 400;
+            transform: translateY(10px); transition: transform 0.4s;
+        }
+        .art-card:hover .art-card-title { transform: translateY(0); }
+
+        .art-card-meta {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 0.3rem;
+            transform: translateY(10px); transition: transform 0.4s 0.05s;
+        }
+        .art-card:hover .art-card-meta { transform: translateY(0); }
+
+        .art-card-cat {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--gold);
+        }
+        .art-card-year { font-size: 0.7rem; color: rgba(255,255,255,0.5); }
+
+        .art-card-view {
+            position: absolute; top: 1rem; right: 1rem;
+            width: 40px; height: 40px;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 1.1rem;
+            transform: scale(0) rotate(-90deg); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .art-card:hover .art-card-view { transform: scale(1) rotate(0deg); }
+
+        /* Bento Grid Spans */
+        .span-c4-r5 { grid-column: span 4; grid-row: span 5; }
+        .span-c5-r4 { grid-column: span 5; grid-row: span 4; }
+        .span-c3-r4 { grid-column: span 3; grid-row: span 4; }
+        .span-c4-r6 { grid-column: span 4; grid-row: span 6; }
+        .span-c5-r5 { grid-column: span 5; grid-row: span 5; }
+        .span-c3-r3 { grid-column: span 3; grid-row: span 3; }
+
+        /* ── Exhibitions ── */
+        #exhibitions {
+            background: var(--ink); color: var(--cream);
+            padding: 8rem 4rem;
+        }
+        .dark #exhibitions { background: #0a0908; }
+
+        .exh-header {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 5rem; padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            max-width: 1400px; margin-inline: auto;
+        }
+        .exh-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300;
+            color: var(--cream);
+        }
+        .exh-title em { color: var(--gold); font-style: italic; }
+        .exh-subtitle { color: rgba(255,255,255,0.35); max-width: 280px; font-size: 0.9rem; line-height: 1.7; }
+
+        .exh-row-wrap { max-width: 1400px; margin: 0 auto; }
+        .exh-row {
+            display: grid; grid-template-columns: 60px 1fr auto;
+            align-items: center; gap: 3rem;
+            padding: 2.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            transition: background 0.3s;
+            cursor: default;
+        }
+        .exh-row:hover { background: rgba(255,255,255,0.03); margin: 0 -2rem; padding-left: 2rem; padding-right: 2rem; }
+        .exh-row:hover .exh-name { font-style: italic; letter-spacing: 0.04em; }
+
+        .exh-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem; color: var(--gold); letter-spacing: 0.1em;
+        }
+        .exh-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem; font-weight: 300; color: var(--cream);
+            transition: all 0.4s;
+        }
+        .exh-detail { font-size: 0.85rem; color: rgba(255,255,255,0.4); margin-top: 0.2rem; }
+        .exh-date {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem; letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.3); text-align: right;
+        }
+
+        /* ── Contact ── */
+        #contact { padding: 8rem 4rem; max-width: 1400px; margin: 0 auto; }
+        .contact-grid {
+            display: grid; grid-template-columns: 1fr 1.5fr;
+            gap: 8rem; align-items: start;
+        }
+        .contact-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--gold); display: block; margin-bottom: 0.5rem;
+        }
+        .contact-info-block { margin-bottom: 3rem; }
+        .contact-info-block p { color: var(--warm-gray); line-height: 1.9; }
+        .contact-info-block a {
+            color: var(--warm-gray); text-decoration: none;
+            transition: color 0.3s;
+        }
+        .contact-info-block a:hover { color: var(--ink); }
+
+        .form-group { margin-bottom: 2.5rem; }
+        .form-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+            color: var(--warm-gray); display: block; margin-bottom: 0.7rem;
+            transition: color 0.3s;
+        }
+        .form-input, .form-textarea {
+            width: 100%; background: transparent;
+            border: none; border-bottom: 1px solid var(--border);
+            padding: 0.7rem 0; color: var(--ink);
+            font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 300;
+            outline: none; transition: border-color 0.3s;
+        }
+        .form-input:focus, .form-textarea:focus { border-color: var(--gold); }
+        .form-input:focus + .form-label, .form-group:focus-within .form-label { color: var(--ink); }
+        .form-textarea { resize: none; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+
+        /* ── Footer ── */
+        footer {
+            background: var(--ink); color: rgba(255,255,255,0.3);
+            padding: 3rem 4rem;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.8rem; letter-spacing: 0.08em;
+        }
+        .dark footer { background: #0a0908; }
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem; color: rgba(255,255,255,0.6);
+        }
+        .footer-socials { display: flex; gap: 1.5rem; }
+        .footer-socials a { color: rgba(255,255,255,0.4); font-size: 1.1rem; transition: color 0.3s; }
+        .footer-socials a:hover { color: var(--gold); }
+
+        /* ── Theme Toggle ── */
+        #theme-toggle {
+            position: fixed; bottom: 2.5rem; right: 2.5rem; z-index: 90;
+            width: 55px; height: 55px;
+            background: var(--ink); color: var(--cream);
+            border: none; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; cursor: none;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, background 0.3s;
+        }
+        #theme-toggle:hover { transform: rotate(-15deg) scale(1.1); }
+        .dark #theme-toggle { background: var(--cream); color: var(--ink); }
+
+        /* ── Mobile nav ── */
+        #mobile-menu-btn {
+            display: none; background: none; border: none;
+            color: var(--ink); font-size: 1.5rem; cursor: none;
+        }
+        #mobile-menu {
+            display: none; position: fixed; inset: 0; z-index: 95;
+            background: var(--cream); padding: 6rem 3rem;
+            flex-direction: column; justify-content: center; gap: 2rem;
+        }
+        #mobile-menu.open { display: flex; }
+        #mobile-menu a {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem; font-weight: 300; color: var(--ink);
+            text-decoration: none; border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem; transition: color 0.3s;
+        }
+        #mobile-menu a:hover { color: var(--gold); }
+        #mobile-close {
+            position: absolute; top: 1.5rem; right: 2rem;
+            background: none; border: none; font-size: 1.5rem;
+            color: var(--ink); cursor: none;
+        }
+
+        /* ── Artwork Modal ── */
+        #artwork-modal {
+            position: fixed; inset: 0; z-index: 200;
+            display: none; align-items: center; justify-content: center;
+            padding: 2rem;
+        }
+        #artwork-modal.open { display: flex; }
+        .modal-backdrop {
+            position: absolute; inset: 0;
+            background: rgba(15,14,12,0.95);
+            backdrop-filter: blur(15px);
+            animation: fadeIn 0.4s forwards;
+        }
+        .modal-inner {
+            position: relative; z-index: 1;
+            max-width: 1100px; width: 100%;
+            display: grid; grid-template-columns: 1fr 380px;
+            background: var(--cream); overflow: hidden;
+            max-height: 85vh;
+            animation: slideUp 0.5s cubic-bezier(0.34,1.2,0.64,1) forwards;
+        }
+        .dark .modal-inner { background: #1a1714; }
+        .modal-img-wrap { overflow: hidden; max-height: 85vh; }
+        .modal-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        .modal-content {
+            padding: 3.5rem 3rem; display: flex; flex-direction: column;
+            overflow-y: auto;
+        }
+        .modal-cat {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 0.8rem;
+        }
+        .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.8rem; font-weight: 300; line-height: 1.1;
+            margin-bottom: 0.5rem;
+        }
+        .modal-year { color: var(--warm-gray); font-size: 0.85rem; margin-bottom: 2rem; }
+        .modal-divider { width: 40px; height: 1px; background: var(--gold); margin-bottom: 2rem; }
+        .modal-desc { color: var(--warm-gray); line-height: 1.9; margin-bottom: auto; }
+        .modal-actions { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+        .modal-close {
+            position: absolute; top: 1.5rem; right: 1.5rem; z-index: 10;
+            background: var(--cream); border: 1px solid var(--border);
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; color: var(--ink); cursor: none;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .dark .modal-close { background: #1a1714; }
+        .modal-close:hover { background: var(--gold); color: var(--cream); transform: rotate(90deg); }
+
+        /* ── Toast ── */
+        #toast {
+            position: fixed; bottom: 6rem; right: 2.5rem; z-index: 300;
+            background: #1a3a1a; color: #90c890;
+            padding: 1rem 1.5rem; font-size: 0.85rem;
+            display: flex; gap: 0.7rem; align-items: center;
+            transform: translateY(2rem); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34,1.3,0.64,1);
+            pointer-events: none;
+        }
+        #toast.show { transform: translateY(0); opacity: 1; }
+
+        /* ── Animations ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; } to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes marqueeScroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* Reveal on scroll */
+        .reveal {
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94),
+                        transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ── Responsive ── */
+        @media (max-width: 1024px) {
+            #hero { grid-template-columns: 1fr; padding: 8rem 2rem 4rem; gap: 4rem; }
+            .hero-collage { height: 500px; }
+            .contact-grid { grid-template-columns: 1fr; gap: 4rem; }
+            .modal-inner { grid-template-columns: 1fr; max-height: 90vh; }
+            .modal-img-wrap { max-height: 40vh; }
+            .gallery-grid { grid-template-columns: repeat(6, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 0 1.5rem; }
+            .nav-links { display: none; }
+            #mobile-menu-btn { display: block; }
+            .hero-name em { margin-left: 2rem; }
+            #philosophy, #portfolio, #exhibitions, #contact { padding-left: 1.5rem; padding-right: 1.5rem; }
+            footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+            .gallery-grid { display: flex; flex-direction: column; }
+            .gallery-grid > div { height: 280px; }
+            .exh-row { grid-template-columns: 1fr; gap: 0.5rem; }
+            .form-row { grid-template-columns: 1fr; gap: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Dynamic Background -->
+    <div class="ambient-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
+    <div id="cursor-ring"></div>
+
+    <!-- Progress Bar -->
+    <div id="progress-bar"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <a href="#hero" class="nav-logo">Rupak Modak</a>
+        <ul class="nav-links">
+            <li><a href="#hero">About</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#philosophy">Philosophy</a></li>
+            <li><a href="#exhibitions">Exhibitions</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button id="mobile-menu-btn" aria-label="Open menu"><i class="ph ph-list"></i></button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu">
+        <button id="mobile-close"><i class="ph ph-x"></i></button>
+        <a href="#hero">About</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#philosophy">Philosophy</a>
+        <a href="#exhibitions">Exhibitions</a>
+        <a href="#contact">Contact</a>
+    </div>
+
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" title="Toggle theme">
+        <i class="ph ph-palette" id="icon-light"></i>
+        <i class="ph-fill ph-palette" id="icon-dark" style="display:none"></i>
+    </button>
+
+    <!-- ═══ CREATIVE HERO ═══ -->
+    <section id="hero">
+        <div class="hero-left">
+            <h1 class="hero-name">
+                Rupak<br>
+                <em>Modak</em>
+            </h1>
+            
+            <p class="hero-subtitle">Capturing the unseen dimensions of our reality.</p>
+            
+            <p class="hero-desc">
+                Born in Kolkata and based in New Delhi, I am an artist and cinematographer who merges tactile traditions with modern cinematic realms. My foundation in classical architecture deeply informs my visual language; I treat the camera's frame as a spatial construct. Driven by a focus on structure, spatial dynamics, and brutalist forms, I craft moving and still images that explore the stark geometry of light, shadow, and human emotion.
+            </p>
+            <p class="hero-desc">
+                My journey began with paintings and immersive digital installations.
+            </p>
+            
+            <div class="hero-cta">
+                <div class="hero-socials">
+                    <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                    <a href="#"><i class="ph ph-behance-logo"></i></a>
+                </div>
+                <a href="#portfolio" class="hero-link">
+                    Explore Works <i class="ph ph-arrow-down-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-collage">
+            <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=1000&auto=format&fit=crop" 
+                 class="collage-img-1" alt="Abstract Art">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop" 
+                 class="collage-img-2" alt="Elias Thorne in Studio">
+            <div class="collage-deco"></div>
+        </div>
+    </section>
+
+    <!-- ═══ MARQUEE ═══ -->
+    <div class="marquee-wrap">
+        <div class="marquee-track">
+            <span class="marquee-item">Expressive</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item bold">Modern Sculpture</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Ethereal</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item bold">Digital Composites</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Timeless</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item bold">Abstract Paintings</span><span class="marquee-dot">✦</span>
+            
+            <span class="marquee-item">Expressive</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item bold">Modern Sculpture</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Ethereal</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item bold">Digital Composites</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item">Timeless</span><span class="marquee-dot">✦</span>
+            <span class="marquee-item bold">Abstract Paintings</span><span class="marquee-dot">✦</span>
+        </div>
+    </div>
+
+    <!-- ═══ PHILOSOPHY ═══ -->
+    <section id="philosophy">
+        <div class="quote-wrap reveal">
+            <div class="quote-mark">"</div>
+            <p class="quote-text">
+                "Art is not what you see, but what you make others <em>feel</em>. I sculpt the negative space as much as the physical form."
+            </p>
+            <div class="quote-attr">Rupak Modak</div>
+        </div>
+    </section>
+
+    <!-- ═══ PORTFOLIO ═══ -->
+    <section id="portfolio">
+        <div class="section-header reveal">
+            <div>
+                <div class="section-count mono">Selected Works</div>
+                <h2 class="section-title">The <span>Gallery</span></h2>
+            </div>
+            <div class="filters" id="filters">
+                <button class="filter-pill active" data-filter="all">All Works</button>
+                <button class="filter-pill" data-filter="painting">Paintings</button>
+                <button class="filter-pill" data-filter="sculpture">Sculpture</button>
+                <button class="filter-pill" data-filter="digital">Digital</button>
+            </div>
+        </div>
+
+        <div class="gallery-grid reveal" id="gallery-grid">
+            <div class="art-card span-c4-r5" data-category="painting" data-title="Echoes of Silence" data-year="2023" data-medium="Oil on Canvas, 180×240cm" data-desc="An exploration of quiet moments in chaotic environments. Using layered oil glazes and industrial textures, this work captures the paradox of stillness within turbulence.">
+                <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?q=80&w=800&auto=format&fit=crop" alt="Echoes of Silence" loading="lazy">
+                <div class="art-card-overlay">
+                    <div class="art-card-title">Echoes of Silence</div>
+                    <div class="art-card-meta">
+                        <span class="art-card-cat">Painting</span>
+                        <span class="art-card-year">2023</span>
+                    </div>
+                </div>
+                <div class="art-card-view"><i class="ph ph-arrow-up-right"></i></div>
+            </div>
+
+            <div class="art-card span-c5-r4" data-category="digital" data-title="Neon Genesis" data-year="2024" data-medium="Digital Composite, Archival Print" data-desc="A 3D rendered digital composite exploring the collision of organic biological forms with synthetic geometric structures. Generated through a hybrid pipeline of procedural modeling and AI texture synthesis.">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" alt="Neon Genesis" loading="lazy">
+                <div class="art-card-overlay">
+                    <div class="art-card-title">Neon Genesis</div>
+                    <div class="art-card-meta">
+                        <span class="art-card-cat">Digital</span>
+                        <span class="art-card-year">2024</span>
+                    </div>
+                </div>
+                <div class="art-card-view"><i class="ph ph-arrow-up-right"></i></div>
+            </div>
+
+            <div class="art-card span-c3-r4" data-category="sculpture" data-title="Fluidity in Bronze" data-year="2022" data-medium="Cast Bronze, 90cm height" data-desc="Representing the continuous flow of time, this lost-wax bronze casting captures motion frozen mid-gesture. The patinated surface tells its own story of oxidation and memory.">
+                <img src="https://images.unsplash.com/photo-1544252890-449e25d254dc?q=80&w=800&auto=format&fit=crop" alt="Fluidity in Bronze" loading="lazy">
+                <div class="art-card-overlay">
+                    <div class="art-card-title">Fluidity in Bronze</div>
+                    <div class="art-card-meta">
+                        <span class="art-card-cat">Sculpture</span>
+                        <span class="art-card-year">2022</span>
+                    </div>
+                </div>
+                <div class="art-card-view"><i class="ph ph-arrow-up-right"></i></div>
+            </div>
+
+            <div class="art-card span-c4-r6" data-category="painting" data-title="Midnight Bloom" data-year="2023" data-medium="Acrylic on Wood Panel, 120×160cm" data-desc="Vibrant colors contrasting with deep voids — inspired by nocturnal botanical studies. This work challenges the viewer's perception of light sources and natural growth patterns.">
+                <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop" alt="Midnight Bloom" loading="lazy">
+                <div class="art-card-overlay">
+                    <div class="art-card-title">Midnight Bloom</div>
+                    <div class="art-card-meta">
+                        <span class="art-card-cat">Painting</span>
+                        <span class="art-card-year">2023</span>
+                    </div>
+                </div>
+                <div class="art-card-view"><i class="ph ph-arrow-up-right"></i></div>
+            </div>
+
+            <div class="art-card span-c5-r5" data-category="digital" data-title="Geometric Illusions" data-year="2021" data-medium="Vector Artwork, Limited Edition Print" data-desc="Vector artwork exploring impossible geometry — where Euclidean space breaks down and perspective becomes a narrative device. Influenced by Piranesi's imaginary prisons and Escher's impossible architectures.">
+                <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop" alt="Geometric Illusions" loading="lazy">
+                <div class="art-card-overlay">
+                    <div class="art-card-title">Geometric Illusions</div>
+                    <div class="art-card-meta">
+                        <span class="art-card-cat">Digital</span>
+                        <span class="art-card-year">2021</span>
+                    </div>
+                </div>
+                <div class="art-card-view"><i class="ph ph-arrow-up-right"></i></div>
+            </div>
+
+            <div class="art-card span-c3-r3" data-category="sculpture" data-title="The Obelisk" data-year="2024" data-medium="Marble & Steel, 2.4m height" data-desc="A minimalist monolith using contrasting materials: white Carrara marble base meeting cold-rolled steel apex. The juxtaposition reflects ancient permanence versus industrial temporality.">
+                <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?q=80&w=800&auto=format&fit=crop" alt="The Obelisk" loading="lazy">
+                <div class="art-card-overlay">
+                    <div class="art-card-title">The Obelisk</div>
+                    <div class="art-card-meta">
+                        <span class="art-card-cat">Sculpture</span>
+                        <span class="art-card-year">2024</span>
+                    </div>
+                </div>
+                <div class="art-card-view"><i class="ph ph-arrow-up-right"></i></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ EXHIBITIONS ═══ -->
+    <!-- <section id="exhibitions">
+        <div class="exh-header reveal">
+            <div>
+                <h2 class="exh-title">Selected<br><em>Exhibitions</em></h2>
+            </div>
+            <p class="exh-subtitle">A curated list of global showcases, gallery features, and permanent installations.</p>
+        </div>
+
+        <div class="exh-row-wrap">
+            <div class="exh-row reveal">
+                <div class="exh-num">01</div>
+                <div>
+                    <div class="exh-name">MoMA PS1</div>
+                    <div class="exh-detail">New York, NY — Solo Exhibition: "Negative Spaces"</div>
+                </div>
+                <div class="exh-date">OCT 2024</div>
+            </div>
+            <div class="exh-row reveal" style="transition-delay:80ms">
+                <div class="exh-num">02</div>
+                <div>
+                    <div class="exh-name">Tate Modern</div>
+                    <div class="exh-detail">London, UK — Group Showcase: "Material Futures"</div>
+                </div>
+                <div class="exh-date">MAY 2023</div>
+            </div>
+            <div class="exh-row reveal" style="transition-delay:160ms">
+                <div class="exh-num">03</div>
+                <div>
+                    <div class="exh-name">Gagosian Gallery</div>
+                    <div class="exh-detail">Paris, France — "Void & Form"</div>
+                </div>
+                <div class="exh-date">NOV 2022</div>
+            </div>
+            <div class="exh-row reveal" style="transition-delay:240ms">
+                <div class="exh-num">04</div>
+                <div>
+                    <div class="exh-name">Venice Biennale</div>
+                    <div class="exh-detail">Venice, Italy — Digital Installation: "Hollow Ground"</div>
+                </div>
+                <div class="exh-date">APR 2021</div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- ═══ CONTACT ═══ -->
+    <section id="contact">
+        <div class="section-header reveal">
+            <div>
+                <div class="section-count mono">Say Hello</div>
+                <h2 class="section-title">Get <span>In Touch</span></h2>
+            </div>
+        </div>
+
+        <div class="contact-grid">
+            <div class="reveal">
+                <!-- <div class="contact-info-block">
+                    <span class="contact-label">Studio Location</span>
+                    <p>124 Brooklyn Navy Yard<br>Brooklyn, NY 11205<br>United States</p>
+                </div> -->
+                <div class="contact-info-block">
+                    <span class="contact-label">Direct Contact</span>
+                    <p>
+                        <a href="mailto:studio@eliasthorne.art">studio@eliasthorne.art</a><br>
+                        <a href="tel:+12125550198">+1 (212) 555-0198</a>
+                    </p>
+                </div>
+                <div class="contact-info-block">
+                    <span class="contact-label">Representation</span>
+                    <p><strong style="font-weight:500">Gagosian Gallery</strong><br>
+                    <a href="mailto:info@gagosian.com">info@gagosian.com</a></p>
+                </div>
+            </div>
+
+            <form id="contact-form" class="reveal" style="transition-delay:150ms">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="name">Name</label>
+                        <input class="form-input" type="text" id="name" required placeholder="Your Name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input class="form-input" type="email" id="email" required placeholder="your@email.com">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="subject">Subject</label>
+                    <select class="form-input" id="subject">
+                        <option value="general">General Inquiry</option>
+                        <option value="commission">Commission Request</option>
+                        <option value="purchase">Artwork Purchase</option>
+                        <option value="press">Press / Interview</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="message">Message</label>
+                    <textarea class="form-textarea" id="message" rows="5" required placeholder="Tell me about your project or inquiry…"></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="margin-top:1rem"><span>Send Message</span></button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer>
+        <div class="footer-logo">Elias Thorne</div>
+        <div style="font-size:0.75rem;letter-spacing:0.12em">© <span id="year"></span> — All Rights Reserved</div>
+        <div class="footer-socials">
+            <a href="#"><i class="ph ph-instagram-logo"></i></a>
+            <a href="#"><i class="ph ph-behance-logo"></i></a>
+            <a href="#"><i class="ph ph-twitter-logo"></i></a>
+        </div>
+    </footer>
+
+    <!-- Artwork Modal -->
+    <div id="artwork-modal">
+        <div class="modal-backdrop" id="modal-backdrop"></div>
+        <div class="modal-inner">
+            <div class="modal-img-wrap">
+                <img id="modal-img" src="" alt="">
+            </div>
+            <div class="modal-content">
+                <p class="modal-cat" id="modal-cat"></p>
+                <h2 class="modal-title serif" id="modal-title"></h2>
+                <p class="modal-year mono" id="modal-year"></p>
+                <div class="modal-divider"></div>
+                <p class="modal-desc" id="modal-desc"></p>
+                <div class="modal-actions">
+                    <div class="contact-label" style="margin-bottom:0.5rem">Medium</div>
+                    <div id="modal-medium" style="font-size:0.9rem;color:var(--warm-gray);margin-bottom:1.5rem"></div>
+                    <a href="#contact" class="btn-primary" onclick="window.closeModal()"><span>Inquire About Work</span></a>
+                </div>
+            </div>
+            <button class="modal-close" id="modal-close"><i class="ph ph-x"></i></button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast">
+        <i class="ph-fill ph-check-circle"></i>
+        <span>Message sent successfully.</span>
+    </div>
+
+    <script>
+    (() => {
+        // ── Year ──
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // ── Custom Cursor ──
+        const cursor = document.getElementById('cursor');
+        const ring = document.getElementById('cursor-ring');
+        let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+        document.addEventListener('mousemove', e => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+        });
+
+        // Smooth ring follow
+        (function animate() {
+            ringX += (mouseX - ringX) * 0.12;
+            ringY += (mouseY - ringY) * 0.12;
+            ring.style.left = ringX + 'px';
+            ring.style.top = ringY + 'px';
+            requestAnimationFrame(animate);
+        })();
+
+        document.querySelectorAll('a, button, .art-card, .filter-pill, .exh-row').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+        });
+
+        // ── Progress bar ──
+        const progressBar = document.getElementById('progress-bar');
+        window.addEventListener('scroll', () => {
+            const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+            progressBar.style.width = pct + '%';
+        });
+
+        // ── Navbar scroll ──
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // ── Theme Toggle ──
+        const themeBtn = document.getElementById('theme-toggle');
+        const iconLight = document.getElementById('icon-light');
+        const iconDark = document.getElementById('icon-dark');
+        
+        const updateIcons = () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            iconLight.style.display = isDark ? 'none' : 'block';
+            iconDark.style.display = isDark ? 'block' : 'none';
+        };
+        
+        updateIcons();
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            updateIcons();
+        });
+
+        // ── Mobile Menu ──
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileClose = document.getElementById('mobile-close');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+        mobileClose.addEventListener('click', () => mobileMenu.classList.remove('open'));
+        mobileMenu.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => mobileMenu.classList.remove('open'));
+        });
+
+        // ── Scroll Reveal ──
+        const revealEls = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+        revealEls.forEach(el => revealObserver.observe(el));
+
+        // ── Portfolio Filter ──
+        const filterBtns = document.querySelectorAll('.filter-pill');
+        const artCards = document.querySelectorAll('.art-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+                artCards.forEach(card => {
+                    const show = filter === 'all' || card.dataset.category === filter;
+                    card.style.opacity = show ? '1' : '0.15';
+                    card.style.filter = show ? 'grayscale(0)' : 'grayscale(1)';
+                    card.style.pointerEvents = show ? '' : 'none';
+                    card.style.transform = show ? 'scale(1)' : 'scale(0.97)';
+                    card.style.transition = 'opacity 0.4s, filter 0.4s, transform 0.4s';
+                });
+            });
+        });
+
+        // ── Modal ──
+        const modal = document.getElementById('artwork-modal');
+        const modalImg = document.getElementById('modal-img');
+        const modalTitle = document.getElementById('modal-title');
+        const modalCat = document.getElementById('modal-cat');
+        const modalYear = document.getElementById('modal-year');
+        const modalDesc = document.getElementById('modal-desc');
+        const modalMedium = document.getElementById('modal-medium');
+        const modalCloseBtn = document.getElementById('modal-close');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+
+        const openModal = (card) => {
+            modalImg.src = card.querySelector('img').src;
+            modalTitle.textContent = card.dataset.title;
+            modalCat.textContent = card.dataset.category;
+            modalYear.textContent = card.dataset.year;
+            modalDesc.textContent = card.dataset.desc;
+            modalMedium.textContent = card.dataset.medium || '';
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        };
+        
+        window.closeModal = () => {
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+        };
+
+        artCards.forEach(card => card.addEventListener('click', () => openModal(card)));
+        modalCloseBtn.addEventListener('click', window.closeModal);
+        modalBackdrop.addEventListener('click', window.closeModal);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') window.closeModal(); });
+
+        // ── Contact Form ──
+        const form = document.getElementById('contact-form');
+        const toast = document.getElementById('toast');
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+            form.reset();
+        });
+    })();
+    </script>
+</body>
+</html>
